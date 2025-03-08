@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:latest
+    container_name: postgres_container
+    restart: always
+    environment:
+      POSTGRES_USER: user1
+      POSTGRES_PASSWORD: pass1
+      POSTGRES_DB: mydatabase
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  app:
+    build: .
+    container_name : node_app
+    ports:
+      - "3002:3000"
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: postgres://user1:pass1@db:5432/mydatabase
+      PORT: 3000
+volumes:
+  postgres_data:
